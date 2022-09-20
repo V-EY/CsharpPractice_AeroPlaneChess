@@ -3,7 +3,8 @@
     internal class Program
     {
         public static int[] Maps = new int[100]; // Map data
-        private static int[] PlayerPos = new int[2]; // Create players' positions
+        public static int[] PlayerPos = new int[2]; // Create players' positions
+        public static ConsoleColor colorDefault = ConsoleColor.White;
 
         private static void Main(string[] args)
         {
@@ -21,43 +22,102 @@
             // The first run
             for (int i = 0; i < 30; i++)
             {
-                // If player A and player B have the same positions, draw Angle brackets
-                if (PlayerPos[0] == PlayerPos[1] && PlayerPos[0] == i)
+                Console.Write(DetermineIcon(i));
+            }
+            Console.ForegroundColor = colorDefault;
+            Console.WriteLine();
+
+            // The first column
+            for (int i = 30; i < 35; i++)
+            {
+                for(int j=0; j < 29; j++)
                 {
-                    Console.Write("⭕");
+                    Console.Write("  ");
                 }
-                else if (PlayerPos[0] == i) // When there's only player A in this position
+                Console.Write(DetermineIcon(i));
+                Console.ForegroundColor = colorDefault;
+                Console.WriteLine();
+            }
+
+            // The second row
+            for (int i = 64; i >= 35; i--)
+            {
+                Console.Write(DetermineIcon(i));
+            }
+            Console.ForegroundColor = colorDefault;
+            Console.WriteLine();
+
+            // The second column
+            for (int i = 65; i < 70; i++)
+            {
+                Console.WriteLine(DetermineIcon(i));
+            }
+            Console.ForegroundColor = colorDefault;
+
+            // The third row
+            for (int i = 70; i < 100; i++)
+            {
+                Console.Write(DetermineIcon(i));
+            }
+            Console.ForegroundColor = colorDefault;
+            Console.WriteLine();
+
+        }
+        /// <summary>
+        /// 绘制地图格的图标
+        /// </summary>
+        /// <param name="i">地图格索引</param>
+        /// <returns>地图格图标</returns>
+        public static string DetermineIcon(int i)
+        {
+            // If player A and player B have the same positions, draw Angle brackets
+            if (PlayerPos[0] == PlayerPos[1] && PlayerPos[0] == i)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                // Console.Write("<>");
+                return " ^";
+            }
+            else if (PlayerPos[0] == i) // When there's only player A in this position
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                // Console.Write(" A ");
+                return " A ";
+            }
+            else if (PlayerPos[1] == i) // When there's only player B  in this position
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                // Console.Write(" B ");
+                return " B ";
+            }
+            else
+            {
+                switch (Maps[i])
                 {
-                    
-                    Console.Write(" A ");
+                    case 0:
+                        Console.ForegroundColor = ConsoleColor.White;
+                        // Console.Write(" □");
+                        // break;
+                        return " □";
+                    case 1:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        // Console.Write(" △");
+                        // break;
+                        return " △";
+                    case 2:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        // Console.Write(" ◇");
+                        // break;
+                        return " ◇";
+                    case 3:
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        return " @";
+                    case 4:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        // Console.Write(" ☆");
+                        // break;
+                        return " ☆";
                 }
-                else if (PlayerPos[1] == i) // When there's only player B  in this position
-                {
-                    Console.Write(" B ");
-                }
-                else
-                {
-                    switch (Maps[i])
-                    {
-                        case 0:
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write("□");
-                            break;
-                        case 1:
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.Write("△");
-                            break;
-                        case 2:
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.Write("◇"); 
-                            break;
-                        case 4:
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.Write("☆");
-                            break;
-                    }
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
+                return Convert.ToString(1);
             }
         }
 
