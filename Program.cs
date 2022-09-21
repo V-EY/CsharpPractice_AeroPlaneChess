@@ -3,7 +3,7 @@
     internal class Program
     {
         public static int[] Maps = new int[100]; // Map data
-        public static int[] PlayerPos = new int[2]; // Create players' p// ositions
+        public static int[] PlayerPos = new int[2]; // Create players' positions
         public static string[] PlayerNames = new string[2]; // Save the role names
         public static bool[] PauseFlag = new bool[2]; // Indicates whether the player needs to pause
         public static ConsoleColor colorDefault = ConsoleColor.White;
@@ -16,15 +16,15 @@
             Console.WriteLine("请输入玩家A的姓名");
             PlayerNames[0] = Console.ReadLine();
             while (PlayerNames[0] == "")
-            { 
+            {
                 Console.WriteLine("玩家 A 的姓名不能为空，请重新输入");
                 PlayerNames[0] = Console.ReadLine();
             }
             Console.WriteLine("请输入玩家 B 的姓名");
-           
+
             PlayerNames[1] = Console.ReadLine();
             while (PlayerNames[1] == "" || (PlayerNames[1] == PlayerNames[0]))
-            { 
+            {
                 if (PlayerNames[1] == "")
                 {
                     Console.WriteLine("玩家的姓名不能为空，请重新输入");
@@ -85,7 +85,6 @@
                 }
             }
             Console.ReadKey(true);
-            
         }
 
         /// <summary>
@@ -107,7 +106,7 @@
             // The first column
             for (int i = 30; i < 35; i++)
             {
-                for(int j=0; j < 29; j++)
+                for (int j = 0; j < 29; j++)
                 {
                     Console.Write("  ");
                 }
@@ -176,19 +175,23 @@
                         // Console.Write(" □");
                         // break;
                         return " □";
+
                     case 1:
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         // Console.Write(" △");
                         // break;
                         return " △";
+
                     case 2:
                         Console.ForegroundColor = ConsoleColor.Green;
                         // Console.Write(" ◇");
                         // break;
                         return " ◇";
+
                     case 3:
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         return " @";
+
                     case 4:
                         Console.ForegroundColor = ConsoleColor.Blue;
                         // Console.Write(" ☆");
@@ -227,7 +230,7 @@
         /// 游戏头
         /// </summary>
         public static void GameShow()
-        {      
+        {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("******************************");
             Console.ForegroundColor = ConsoleColor.Green;
@@ -275,6 +278,7 @@
                         Console.WriteLine("玩家 {0} 踩到了方块，安全，按任意键继续", PlayerNames[playerNum]);
                         Console.ReadKey(true);
                         break;
+
                     case 1:
                         Console.WriteLine("玩家 {0} 踩到了幸运轮盘，请选择\n1-> 交换位置\n2-> 轰炸对方，使对方退 6 格", PlayerNames[playerNum]);
                         string luckyTuneInput = Console.ReadLine();
@@ -307,17 +311,20 @@
                             }
                         }
                         break;
+
                     case 2:
                         Console.WriteLine("玩家 {0} 踩到了地雷，退 6 格", PlayerNames[playerNum]);
                         PlayerPos[playerNum] -= 6;
                         JudgingPos();
                         Console.ReadKey(true);
                         break;
+
                     case 3:
                         Console.WriteLine("玩家 {0} 踩到了暂停，暂停一回合", PlayerNames[playerNum]);
                         PauseFlag[playerNum] = true;
                         Console.ReadKey(true);
                         break;
+
                     case 4:
                         Console.WriteLine("玩家 {0} 踩到了时空隧道，前进 10 格", PlayerNames[playerNum]);
                         PlayerPos[playerNum] += 10;
@@ -342,7 +349,7 @@
             {
                 PlayerPos[0] = 0;
             }
-            if(PlayerPos[1] < 0)
+            if (PlayerPos[1] < 0)
             {
                 PlayerPos[1] = 0;
             }
@@ -355,6 +362,5 @@
                 PlayerPos[1] = 99;
             }
         }
-
     }
 }
