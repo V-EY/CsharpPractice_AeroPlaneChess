@@ -5,6 +5,7 @@
         public static int[] Maps = new int[100]; // Map data
         public static int[] PlayerPos = new int[2]; // Create players' p// ositions
         public static string[] PlayerNames = new string[2]; // Save the role names
+        public static bool[] PauseFlag = new bool[2]; // Indicates whether the player needs to pause
         public static ConsoleColor colorDefault = ConsoleColor.White;
 
         private static void Main(string[] args)
@@ -43,7 +44,48 @@
 
             InitializeMap();
             DrawMap();
-            Console.ReadKey();
+
+            // When no player is at the end, the game continues
+            while (PlayerPos[0] < 99 && PlayerPos[1] < 99)
+            {
+                // Judging if player A needs to pause a turn
+                if (PauseFlag[0] == false)
+                {
+                    PlayGame(0);
+                }
+                else
+                {
+                    PauseFlag[0] = false;
+                }
+
+                // Judging the victory condition of player A
+                if (PlayerPos[0] >= 99)
+                {
+                    Console.WriteLine("玩家 {0} 胜利！\n", PlayerNames[0]);
+                    Console.WriteLine("按任意键结束游戏.......");
+                    break;
+                }
+
+                // Judging if player B needs to pause a turn
+                if (PauseFlag[1] == false)
+                {
+                    PlayGame(1);
+                }
+                else
+                {
+                    PauseFlag[1] = false;
+                }
+
+                // Judging the victory condition of player B
+                if (PlayerPos[1] >= 99)
+                {
+                    Console.WriteLine("玩家 {0} 胜利！\n", PlayerNames[1]);
+                    Console.WriteLine("按任意键结束游戏.......");
+                    break;
+                }
+            }
+            Console.ReadKey(true);
+            
         }
 
         /// <summary>
@@ -96,8 +138,9 @@
             }
             Console.ForegroundColor = colorDefault;
             Console.WriteLine();
-
+            Console.WriteLine();
         }
+
         /// <summary>
         /// 绘制地图格的图标
         /// </summary>
@@ -116,13 +159,13 @@
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 // Console.Write(" A ");
-                return " A ";
+                return " A";
             }
             else if (PlayerPos[1] == i) // When there's only player B  in this position
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 // Console.Write(" B ");
-                return " B ";
+                return " B";
             }
             else
             {
@@ -197,5 +240,121 @@
             Console.WriteLine("******************************");
             Console.ForegroundColor = ConsoleColor.White;
         }
+
+        /// <summary>
+        /// 开始游戏
+        /// </summary>
+        public static void PlayGame(int playerNum)
+        {
+            // Random roll of the dice
+            Random rand = new Random();
+            int rNum = rand.Next(1, 7);
+
+            Console.WriteLine("{0} 按任意键开始掷骰子", PlayerNames[playerNum]);
+            Console.ReadKey(true);
+            Console.WriteLine("{0} 掷出了 {1}", PlayerNames[playerNum], rNum);
+            PlayerPos[playerNum] += rNum;
+            JudgingPos();
+            Console.ReadKey(true);
+            Console.WriteLine("{0} 行动完了", PlayerNames[playerNum]);
+            Console.ReadKey(true);
+
+            // Judging player behavior
+            if (PlayerPos[playerNum] == PlayerPos[1 - playerNum])
+            {
+                Console.WriteLine("玩家 {0} 踩到了玩家 {1}，玩家 {1} 退 6 格", PlayerNames[playerNum], PlayerNames[1 - playerNum]);
+                PlayerPos[1 - playerNum] -= 6;
+                JudgingPos();
+                Console.ReadKey(true);
+            }
+            else
+            {
+                switch (Maps[PlayerPos[playerNum]])
+                {
+                    case 0:
+                        Console.WriteLine("玩家 {0} 踩到了方块，安全，按任意键继续", PlayerNames[playerNum]);
+                        Console.ReadKey(true);
+                        break;
+                    case 1:
+                        Console.WriteLine("玩家 {0} 踩到了幸运轮盘，请选择\n1-> 交换位置\n2-> 轰炸对方，使对方退 6 格", PlayerNames[playerNum]);
+                        string luckyTuneInput = Console.ReadLine();
+                        while (true)
+                        {
+                            if (luckyTuneInput == "1")
+                            {
+                                Console.WriteLine("玩家 {0} 选择和玩家 {1} 交换位置", PlayerNames[playerNum], PlayerNames[1 - playerNum]);
+                                int temp = PlayerPos[playerNum];
+                                PlayerPos[playerNum] = PlayerPos[1 - playerNum];
+                                PlayerPos[1 - playerNum] = temp;
+                                Console.WriteLine("交换完成！按任意键继续");
+                                Console.ReadKey(true);
+                                break;
+                            }
+                            else if (luckyTuneInput == "2")
+                            {
+                                Console.WriteLine("玩家 {0} 选择轰炸玩家 {1}，玩家 {1} 退 6 格", PlayerNames[playerNum], PlayerNames[1 - playerNum]);
+                                Console.ReadKey(true);
+                                PlayerPos[1 - playerNum] -= 6;
+                                JudgingPos();
+                                Console.WriteLine("玩家 {0} 退了 6 格", PlayerNames[1 - playerNum]);
+                                Console.ReadKey(true);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("只能输入 1 或 2");
+                                luckyTuneInput = Console.ReadLine();
+                            }
+                        }
+                        break;
+                    case 2:
+                        Console.WriteLine("玩家 {0} 踩到了地雷，退 6 格", PlayerNames[playerNum]);
+                        PlayerPos[playerNum] -= 6;
+                        JudgingPos();
+                        Console.ReadKey(true);
+                        break;
+                    case 3:
+                        Console.WriteLine("玩家 {0} 踩到了暂停，暂停一回合", PlayerNames[playerNum]);
+                        PauseFlag[playerNum] = true;
+                        Console.ReadKey(true);
+                        break;
+                    case 4:
+                        Console.WriteLine("玩家 {0} 踩到了时空隧道，前进 10 格", PlayerNames[playerNum]);
+                        PlayerPos[playerNum] += 10;
+                        JudgingPos();
+                        Console.ReadKey(true);
+                        break;
+                }
+            }
+
+            JudgingPos();
+            Console.Clear();
+            DrawMap();
+        }
+
+        /// <summary>
+        /// 当玩家坐标发生改变则调用
+        /// </summary>
+        public static void JudgingPos()
+        {
+            // Avoid players' positions going out of bounds
+            if (PlayerPos[0] < 0)
+            {
+                PlayerPos[0] = 0;
+            }
+            if(PlayerPos[1] < 0)
+            {
+                PlayerPos[1] = 0;
+            }
+            if (PlayerPos[0] > 99)
+            {
+                PlayerPos[0] = 99;
+            }
+            if (PlayerPos[1] > 99)
+            {
+                PlayerPos[1] = 99;
+            }
+        }
+
     }
 }
