@@ -3,12 +3,40 @@
     internal class Program
     {
         public static int[] Maps = new int[100]; // Map data
-        public static int[] PlayerPos = new int[2]; // Create players' positions
+        public static int[] PlayerPos = new int[2]; // Create players' p// ositions
+        public static string[] PlayerNames = new string[2]; // Save the role names
         public static ConsoleColor colorDefault = ConsoleColor.White;
 
         private static void Main(string[] args)
         {
             GameShow();
+
+            #region// Get the players' name
+            Console.WriteLine("请输入玩家A的姓名");
+            PlayerNames[0] = Console.ReadLine();
+            while (PlayerNames[0] == "")
+            { 
+                Console.WriteLine("玩家 A 的姓名不能为空，请重新输入");
+                PlayerNames[0] = Console.ReadLine();
+            }
+            Console.WriteLine("请输入玩家 B 的姓名");
+           
+            PlayerNames[1] = Console.ReadLine();
+            while (PlayerNames[1] == "" || (PlayerNames[1] == PlayerNames[0]))
+            { 
+                if (PlayerNames[1] == "")
+                {
+                    Console.WriteLine("玩家的姓名不能为空，请重新输入");
+                    PlayerNames[1] = Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine("玩家的姓名不能玩家 A 的相同，请重新输入");
+                    PlayerNames[1] = Console.ReadLine();
+                }
+            }
+            #endregion
+
             InitializeMap();
             DrawMap();
             Console.ReadKey();
