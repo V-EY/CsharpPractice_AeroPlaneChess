@@ -36,6 +36,10 @@
                 }
             }
             #endregion
+            Console.Clear();
+            GameShow();
+            Console.WriteLine("{0}的士兵用 A 表示", PlayerNames[0]);
+            Console.WriteLine("{0}的士兵用 B 表示", PlayerNames[1]);
 
             InitializeMap();
             DrawMap();
@@ -47,6 +51,9 @@
         /// </summary>
         public static void DrawMap()
         {
+            // Legend
+            Console.WriteLine("□：地图格子   △：幸运罗盘   ◇：地雷   @：暂停   ☆：时空隧道");
+
             // The first run
             for (int i = 0; i < 30; i++)
             {
